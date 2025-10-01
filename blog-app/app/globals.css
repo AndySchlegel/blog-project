@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0f172a;
+  --foreground: #0b1120;
+  --surface: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #020617;
+    --foreground: #e2e8f0;
+    --surface: #0f172a;
+  }
+}
+
+body {
+  background-color: #f8fafc;
+  color: #0f172a;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+}
+
+.button-global {
+  background: linear-gradient(135deg, #ec4899, #f97316);
+  border: none;
+  border-radius: 9999px;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  padding: 0.75rem 1.75rem;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.button-global:hover {
+  box-shadow: 0 20px 45px -20px rgba(236, 72, 153, 0.5);
+  transform: translateY(-2px);
+}
+
+main a {
+  color: inherit;
+}

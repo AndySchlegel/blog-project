@@ -1,0 +1,32 @@
+services:
+  app:
+    # Baut das Next.js-Image aus dem Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: blog-app
+    env_file:
+      - .env.docker
+    ports:
+      - "3000:3000" # Lokal erreichbar unter http://localhost:3000
+    restart: unless-stopped
+    networks:
+      - blog-net
+
+  nginx:
+    # Schlanke Nginx-Variante auf Alpine-Basis
+    image: nginx:1.27-alpine
+    container_name: blog-nginx
+    ports:
+      - "8080:80" # Reverse Proxy -> http://localhost:8080
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+    restart: unless-stopped
+    networks:
+      - blog-net
+
+networks:
+  blog-net:
+    driver: bridge
