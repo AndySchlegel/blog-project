@@ -1,0 +1,56 @@
+name: Deploy to Synology
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # Allows manual trigger from GitHub UI
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SYNOLOGY_HOST }}
+          username: ${{ secrets.SYNOLOGY_USER }}
+          key: ${{ secrets.SYNOLOGY_SSH_KEY }}
+          port: ${{ secrets.SYNOLOGY_SSH_PORT || 22 }}
+          script: |
+            cd ${{ secrets.SYNOLOGY_APP_PATH }}
+            echo "🔄 Pulling latest changes from main branch..."
+            git fetch origin
+            git checkout main
+            git pull origin main
+
+            echo "🐳 Rebuilding Docker containers..."
+            cd blog-app
+            docker compose down
+            docker compose build --no-cache
+            docker compose up -d
+
+            echo "🧹 Cleaning up old Docker images..."
+            docker image prune -f
+
+            echo "✅ Deployment completed successfully!"
+
+      - name: Verify Deployment
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SYNOLOGY_HOST }}
+          username: ${{ secrets.SYNOLOGY_USER }}
+          key: ${{ secrets.SYNOLOGY_SSH_KEY }}
+          port: ${{ secrets.SYNOLOGY_SSH_PORT || 22 }}
+          script: |
+            cd ${{ secrets.SYNOLOGY_APP_PATH }}/blog-app
+            echo "📊 Container Status:"
+            docker compose ps
+            echo ""
+            echo "📝 Recent Logs:"
+            docker compose logs --tail=20 app
