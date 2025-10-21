@@ -1,11 +1,17 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { useCallback, useEffect, useState } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
+import Link from 'next/link';
+import Image from 'next/image';
+import { useCallback, useEffect, useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 
-// Formatter instanziieren wir einmal, damit Server- und Client-Render denselben Zeitzonen-Output liefern
-const dateFormatter = new Intl.DateTimeFormat('de-DE', { timeZone: 'Europe/Berlin' })
+const dateFormatter = new Intl.DateTimeFormat('de-DE', {
+  timeZone: 'Europe/Berlin',
+  day: '2-digit',
+  month: 'long',
+  year: 'numeric'
+});
+
 const INITIAL_FORM = {
   title: '',
   excerpt: '',
@@ -13,81 +19,80 @@ const INITIAL_FORM = {
   category: '',
   tags: '',
   status: 'published'
-}
+};
 
-export default function BlogPage () {
-  const [posts, setPosts] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
-  const [categories, setCategories] = useState([])
-  const [categoriesError, setCategoriesError] = useState('')
-  const [formData, setFormData] = useState(INITIAL_FORM)
-  const [formErrors, setFormErrors] = useState({})
-  const [formSuccess, setFormSuccess] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const { user, loading: authLoading } = useAuth()
+export default function BlogPage() {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [categories, setCategories] = useState([]);
+  const [categoriesError, setCategoriesError] = useState('');
+  const [formData, setFormData] = useState(INITIAL_FORM);
+  const [formErrors, setFormErrors] = useState({});
+  const [formSuccess, setFormSuccess] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user, loading: authLoading } = useAuth();
 
   const fetchPosts = useCallback(async () => {
-    setLoading(true)
-    setErrorMessage('')
+    setLoading(true);
+    setErrorMessage('');
 
     try {
       const response = await fetch('/api/posts?status=published&limit=100', {
         cache: 'no-store'
-      })
+      });
 
       if (!response.ok) {
-        throw new Error('Serverantwort fehlgeschlagen')
+        throw new Error('Serverantwort fehlgeschlagen');
       }
 
-      const result = await response.json()
-      setPosts(Array.isArray(result.data) ? result.data : [])
+      const result = await response.json();
+      setPosts(Array.isArray(result.data) ? result.data : []);
     } catch (error) {
-      console.error('Fehler beim Laden der Blog-Posts:', error)
-      setErrorMessage('Posts konnten nicht geladen werden. Bitte später erneut versuchen.')
+      console.error('Fehler beim Laden der Blog-Posts:', error);
+      setErrorMessage('Posts konnten nicht geladen werden. Bitte später erneut versuchen.');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [])
+  }, []);
 
   const fetchCategories = useCallback(async () => {
-    setCategoriesError('')
+    setCategoriesError('');
 
     try {
       const response = await fetch('/api/categories', {
         cache: 'no-store'
-      })
+      });
 
       if (!response.ok) {
-        throw new Error('Serverantwort fehlgeschlagen')
+        throw new Error('Serverantwort fehlgeschlagen');
       }
 
-      const result = await response.json()
-      setCategories(Array.isArray(result.data) ? result.data : [])
+      const result = await response.json();
+      setCategories(Array.isArray(result.data) ? result.data : []);
     } catch (error) {
-      console.error('Fehler beim Laden der Kategorien:', error)
-      setCategories([])
-      setCategoriesError('Kategorien konnten nicht geladen werden. Bitte später erneut versuchen.')
+      console.error('Fehler beim Laden der Kategorien:', error);
+      setCategories([]);
+      setCategoriesError('Kategorien konnten nicht geladen werden.');
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    // Beim ersten Rendern Posts und Kategorien laden
-    fetchPosts()
-    fetchCategories()
-  }, [fetchPosts, fetchCategories])
+    fetchPosts();
+    fetchCategories();
+  }, [fetchPosts, fetchCategories]);
 
   const handleFormChange = (event) => {
-    const { name, value } = event.target
-    setFormData((previous) => ({ ...previous, [name]: value }))
-  }
+    const { name, value } = event.target;
+    setFormData((previous) => ({ ...previous, [name]: value }));
+  };
 
   const handleSubmit = async (event) => {
-    event.preventDefault()
-    setIsSubmitting(true)
-    setFormErrors({})
-    setFormSuccess('')
+    event.preventDefault();
+    setIsSubmitting(true);
+    setFormErrors({});
+    setFormSuccess('');
 
     try {
       const payload = {
@@ -96,19 +101,19 @@ export default function BlogPage () {
         content: formData.content.trim(),
         category: formData.category,
         status: formData.status
-      }
+      };
 
       const tags = formData.tags
         .split(',')
         .map((tag) => tag.trim())
-        .filter(Boolean)
+        .filter(Boolean);
 
       if (tags.length > 0) {
-        payload.tags = tags
+        payload.tags = tags;
       }
 
       if (payload.status === 'published') {
-        payload.publishedAt = new Date().toISOString()
+        payload.publishedAt = new Date().toISOString();
       }
 
       const response = await fetch('/api/posts', {
@@ -117,254 +122,407 @@ export default function BlogPage () {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload)
-      })
+      });
 
-      const result = await response.json()
+      const result = await response.json();
 
       if (!response.ok) {
-        setFormErrors(result.details || {})
-        throw new Error(result.error || 'Speichern fehlgeschlagen.')
+        setFormErrors(result.details || {});
+        throw new Error(result.error || 'Speichern fehlgeschlagen.');
       }
 
-      setFormData(INITIAL_FORM)
-      setFormErrors({})
-      setFormSuccess('Beitrag wurde gespeichert.')
-      await fetchPosts()
+      setFormData(INITIAL_FORM);
+      setFormErrors({});
+      setFormSuccess('Beitrag wurde erfolgreich gespeichert!');
+      await fetchPosts();
     } catch (error) {
-      console.error('Fehler beim Speichern des Posts:', error)
-      setFormErrors((previous) => ({ ...previous, general: error.message }))
+      console.error('Fehler beim Speichern des Posts:', error);
+      setFormErrors((previous) => ({ ...previous, general: error.message }));
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
-  // Client-seitige Filterung nach Titel oder Inhalt
   const filteredPosts = posts.filter((post) => {
-    const haystack = `${post.title ?? ''} ${post.content ?? ''}`.toLowerCase()
-    return haystack.includes(filter.toLowerCase())
-  })
+    const haystack = `${post.title ?? ''} ${post.content ?? ''}`.toLowerCase();
+    return haystack.includes(filter.toLowerCase());
+  });
 
   if (loading) {
-    return <div className="p-8">Lade Blog-Posts...</div>
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+        <div className="text-center">
+          <div className="mb-4 inline-block h-16 w-16 animate-spin rounded-full border-4 border-slate-200 border-t-blue-600"></div>
+          <p className="text-lg font-medium text-slate-600">Lade Blog-Posts...</p>
+        </div>
+      </div>
+    );
   }
 
   if (errorMessage) {
     return (
-      <div className="p-8">
-        <p className="text-red-600 mb-4">{errorMessage}</p>
-        <button
-          onClick={fetchPosts}
-          className="px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          Erneut versuchen
-        </button>
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-8">
+        <div className="max-w-md rounded-2xl bg-white p-8 text-center shadow-xl">
+          <div className="mb-4 text-6xl">⚠️</div>
+          <p className="mb-6 text-lg text-red-600">{errorMessage}</p>
+          <button
+            onClick={fetchPosts}
+            className="rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 font-semibold text-white shadow-lg transition-all hover:scale-105"
+          >
+            Erneut versuchen
+          </button>
+        </div>
       </div>
-    )
+    );
   }
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Blog</h1>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 pb-20 pt-24">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute left-1/4 top-1/4 h-96 w-96 animate-pulse rounded-full bg-blue-500 blur-3xl" />
+          <div className="absolute right-1/4 top-1/3 h-96 w-96 animate-pulse rounded-full bg-purple-500 blur-3xl animation-delay-2000" />
+        </div>
 
-      {/* Einfaches Suchfeld zur client-seitigen Filterung */}
-      <input
-        type="text"
-        placeholder="Suche Posts..."
-        value={filter}
-        onChange={(event) => setFilter(event.target.value)}
-        className="w-full p-2 border rounded mb-6"
-      />
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm ring-1 ring-white/20">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
+              </span>
+              Persönliche Erfahrungen & Projekt-Logs
+            </div>
 
-      <section className="mb-10 rounded border p-6">
-        <h2 className="text-2xl font-semibold mb-4">Neuen Beitrag erstellen</h2>
+            <h1 className="mb-6 text-6xl font-black tracking-tight text-white sm:text-7xl">
+              Mein Tech <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Blog</span>
+            </h1>
 
-        {authLoading && <p className="text-sm text-slate-600">Prüfe Anmeldestatus…</p>}
+            <p className="mx-auto max-w-3xl text-xl leading-relaxed text-blue-100">
+              Behind the Scenes meiner Projekte. Von ersten Ideen über Debugging-Sessions bis zum Production Deployment.
+            </p>
+          </div>
+        </div>
+
+        <div className="absolute bottom-0 left-0 w-full">
+          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
+            <path d="M0 0L60 10C120 20 240 40 360 46.7C480 53 600 47 720 43.3C840 40 960 40 1080 46.7C1200 53 1320 67 1380 73.3L1440 80V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0V0Z" fill="rgb(248 250 252)" />
+          </svg>
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        {/* Search Bar */}
+        <div className="mb-12">
+          <div className="relative">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+              <svg className="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <input
+              type="text"
+              placeholder="Posts durchsuchen..."
+              value={filter}
+              onChange={(event) => setFilter(event.target.value)}
+              className="w-full rounded-2xl border border-slate-200 bg-white py-4 pl-12 pr-4 text-slate-900 shadow-lg transition-all placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/20"
+            />
+          </div>
+        </div>
+
+        {/* Create Post Section */}
+        {user && (
+          <section className="mb-12 overflow-hidden rounded-3xl bg-white shadow-xl">
+            <div className="border-b border-slate-100 bg-gradient-to-r from-blue-50 to-purple-50 p-6">
+              <h2 className="flex items-center gap-3 text-2xl font-bold text-slate-900">
+                <svg className="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Neuen Beitrag erstellen
+              </h2>
+            </div>
+
+            <div className="p-8">
+              {formSuccess && (
+                <div className="mb-6 flex items-center gap-3 rounded-xl bg-green-50 p-4 text-green-800 ring-1 ring-green-200">
+                  <svg className="h-5 w-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  {formSuccess}
+                </div>
+              )}
+
+              {formErrors.general && (
+                <div className="mb-6 flex items-center gap-3 rounded-xl bg-red-50 p-4 text-red-800 ring-1 ring-red-200">
+                  <svg className="h-5 w-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  </svg>
+                  {formErrors.general}
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="grid gap-6">
+                <div>
+                  <label htmlFor="title" className="mb-2 block text-sm font-bold text-slate-700">
+                    Titel
+                  </label>
+                  <input
+                    id="title"
+                    name="title"
+                    type="text"
+                    value={formData.title}
+                    onChange={handleFormChange}
+                    className="w-full rounded-xl border border-slate-200 px-4 py-3 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/20"
+                    placeholder="z.B. Mein Homelab Upgrade 2024"
+                    required
+                  />
+                  {formErrors.title && <p className="mt-2 text-sm text-red-600">{formErrors.title}</p>}
+                </div>
+
+                <div>
+                  <label htmlFor="excerpt" className="mb-2 block text-sm font-bold text-slate-700">
+                    Kurzbeschreibung
+                  </label>
+                  <textarea
+                    id="excerpt"
+                    name="excerpt"
+                    value={formData.excerpt}
+                    onChange={handleFormChange}
+                    className="w-full rounded-xl border border-slate-200 px-4 py-3 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/20"
+                    placeholder="Eine kurze Zusammenfassung..."
+                    rows={3}
+                    required
+                  />
+                  {formErrors.excerpt && <p className="mt-2 text-sm text-red-600">{formErrors.excerpt}</p>}
+                </div>
+
+                <div>
+                  <label htmlFor="content" className="mb-2 block text-sm font-bold text-slate-700">
+                    Inhalt
+                  </label>
+                  <textarea
+                    id="content"
+                    name="content"
+                    value={formData.content}
+                    onChange={handleFormChange}
+                    className="w-full rounded-xl border border-slate-200 px-4 py-3 font-mono text-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/20"
+                    placeholder="Dein Beitrag..."
+                    rows={10}
+                    required
+                  />
+                  {formErrors.content && <p className="mt-2 text-sm text-red-600">{formErrors.content}</p>}
+                </div>
+
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div>
+                    <label htmlFor="category" className="mb-2 block text-sm font-bold text-slate-700">
+                      Kategorie
+                    </label>
+                    <select
+                      id="category"
+                      name="category"
+                      value={formData.category}
+                      onChange={handleFormChange}
+                      className="w-full rounded-xl border border-slate-200 px-4 py-3 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/20"
+                      required
+                    >
+                      <option value="">Kategorie wählen…</option>
+                      {categories.map((category) => (
+                        <option key={category._id} value={category._id}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
+                    {categoriesError && <p className="mt-2 text-sm text-red-600">{categoriesError}</p>}
+                    {formErrors.category && <p className="mt-2 text-sm text-red-600">{formErrors.category}</p>}
+                  </div>
+
+                  <div>
+                    <label htmlFor="status" className="mb-2 block text-sm font-bold text-slate-700">
+                      Status
+                    </label>
+                    <select
+                      id="status"
+                      name="status"
+                      value={formData.status}
+                      onChange={handleFormChange}
+                      className="w-full rounded-xl border border-slate-200 px-4 py-3 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/20"
+                    >
+                      <option value="draft">Entwurf</option>
+                      <option value="published">Veröffentlicht</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="tags" className="mb-2 block text-sm font-bold text-slate-700">
+                    Tags (kommagetrennt)
+                  </label>
+                  <input
+                    id="tags"
+                    name="tags"
+                    type="text"
+                    value={formData.tags}
+                    onChange={handleFormChange}
+                    className="w-full rounded-xl border border-slate-200 px-4 py-3 transition-all focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/20"
+                    placeholder="docker, kubernetes, homelab"
+                  />
+                  {formErrors.tags && <p className="mt-2 text-sm text-red-600">{formErrors.tags}</p>}
+                </div>
+
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center gap-2 self-start rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 font-bold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+                  disabled={isSubmitting || categories.length === 0}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                      Speichere...
+                    </>
+                  ) : (
+                    <>
+                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      Beitrag veröffentlichen
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+          </section>
+        )}
 
         {!authLoading && !user && (
-          <div className="rounded border border-blue-200 bg-blue-50 p-4 text-sm text-blue-800">
-            <p className="font-medium">Bitte anmelden, um Beiträge zu verfassen.</p>
-            <p className="mt-2">
-              <Link href="/login" className="font-semibold underline">Zum Login</Link>{' '}
-              oder{' '}
-              <Link href="/register" className="font-semibold underline">jetzt registrieren</Link>.
-            </p>
+          <div className="mb-12 overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-center text-white shadow-xl">
+            <svg className="mx-auto mb-4 h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            <h3 className="mb-3 text-2xl font-bold">Beiträge erstellen</h3>
+            <p className="mb-6 text-blue-100">Melde dich an, um eigene Blog-Beiträge zu verfassen und zu teilen.</p>
+            <div className="flex items-center justify-center gap-4">
+              <Link
+                href="/login"
+                className="rounded-full bg-white px-6 py-3 font-bold text-blue-600 transition-all hover:scale-105"
+              >
+                Anmelden
+              </Link>
+              <Link
+                href="/register"
+                className="rounded-full border-2 border-white px-6 py-3 font-bold text-white transition-all hover:bg-white/10"
+              >
+                Registrieren
+              </Link>
+            </div>
           </div>
         )}
 
-        {!authLoading && user && (
-          <>
-            {formSuccess && (
-              <p className="mb-4 rounded bg-green-100 px-3 py-2 text-green-800">{formSuccess}</p>
-            )}
+        {/* Blog Posts Grid */}
+        <div className="grid gap-8 lg:grid-cols-2">
+          {filteredPosts.map((post) => {
+            const summary = post.summary ?? `${post.excerpt ?? post.content?.substring(0, 200) ?? ''}...`;
+            const publishedDate = post.publishedAt ? dateFormatter.format(new Date(post.publishedAt)) : 'Unveröffentlicht';
 
-            {formErrors.general && (
-              <p className="mb-4 rounded bg-red-100 px-3 py-2 text-red-700">{formErrors.general}</p>
-            )}
-
-            <form onSubmit={handleSubmit} className="grid gap-4">
-              <div>
-                <label htmlFor="title" className="mb-1 block font-medium">
-                  Titel
-                </label>
-                <input
-                  id="title"
-                  name="title"
-                  type="text"
-                  value={formData.title}
-                  onChange={handleFormChange}
-                  className="w-full rounded border p-2"
-                  placeholder="Titel des Beitrags"
-                  required
-                />
-                {formErrors.title && <p className="mt-1 text-sm text-red-600">{formErrors.title}</p>}
-              </div>
-
-              <div>
-                <label htmlFor="excerpt" className="mb-1 block font-medium">
-                  Kurzbeschreibung
-                </label>
-                <textarea
-                  id="excerpt"
-                  name="excerpt"
-                  value={formData.excerpt}
-                  onChange={handleFormChange}
-                  className="w-full rounded border p-2"
-                  placeholder="Kurze Zusammenfassung (mind. 10 Zeichen)"
-                  rows={2}
-                  required
-                />
-                {formErrors.excerpt && <p className="mt-1 text-sm text-red-600">{formErrors.excerpt}</p>}
-              </div>
-
-              <div>
-                <label htmlFor="content" className="mb-1 block font-medium">
-                  Inhalt
-                </label>
-                <textarea
-                  id="content"
-                  name="content"
-                  value={formData.content}
-                  onChange={handleFormChange}
-                  className="w-full rounded border p-2"
-                  placeholder="Vollständiger Inhalt (mind. 50 Zeichen)"
-                  rows={6}
-                  required
-                />
-                {formErrors.content && <p className="mt-1 text-sm text-red-600">{formErrors.content}</p>}
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <label htmlFor="category" className="mb-1 block font-medium">
-                    Kategorie
-                  </label>
-                  <select
-                    id="category"
-                    name="category"
-                    value={formData.category}
-                    onChange={handleFormChange}
-                    className="w-full rounded border p-2"
-                    required
-                  >
-                    <option value="">Kategorie wählen…</option>
-                    {categories.map((category) => (
-                      <option key={category._id} value={category._id}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </select>
-                  {categoriesError && <p className="mt-1 text-sm text-red-600">{categoriesError}</p>}
-                  {formErrors.category && <p className="mt-1 text-sm text-red-600">{formErrors.category}</p>}
-                </div>
-
-                <div>
-                  <label htmlFor="status" className="mb-1 block font-medium">
-                    Status
-                  </label>
-                  <select
-                    id="status"
-                    name="status"
-                    value={formData.status}
-                    onChange={handleFormChange}
-                    className="w-full rounded border p-2"
-                  >
-                    <option value="draft">Entwurf</option>
-                    <option value="published">Veröffentlicht</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="tags" className="mb-1 block font-medium">
-                  Tags (optional)
-                </label>
-                <input
-                  id="tags"
-                  name="tags"
-                  type="text"
-                  value={formData.tags}
-                  onChange={handleFormChange}
-                  className="w-full rounded border p-2"
-                  placeholder="z.B. react, javascript"
-                />
-                {formErrors.tags && <p className="mt-1 text-sm text-red-600">{formErrors.tags}</p>}
-              </div>
-
-              <button
-                type="submit"
-                className="self-start rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
-                disabled={isSubmitting || categories.length === 0}
+            return (
+              <article
+                key={post._id}
+                className="group relative overflow-hidden rounded-3xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
               >
-                {isSubmitting ? 'Speichere…' : 'Beitrag speichern'}
-              </button>
-            </form>
-          </>
-        )}
-      </section>
-
-      <div className="grid gap-6">
-        {filteredPosts.map((post) => {
-          const summary = post.summary ?? `${post.excerpt ?? post.content?.substring(0, 160) ?? ''}...`
-          const publishedDate = post.publishedAt ? dateFormatter.format(new Date(post.publishedAt)) : 'unveröffentlicht'
-
-          return (
-            <article key={post._id} className="border rounded p-6">
-              <h2 className="text-2xl font-semibold mb-2">{post.title}</h2>
-
-              <div className="text-gray-600 text-sm mb-4">
-                {/* Fallbacks, falls im Seed noch kein Autor gesetzt wurde */}
-                von {post.author?.name ?? 'Unbekannt'} • {publishedDate}
+                {/* Category Badge */}
                 {post.category?.name && (
-                  <span className="ml-2 text-xs uppercase tracking-wide text-blue-600">
+                  <div className="absolute right-4 top-4 z-10 rounded-full bg-white/95 px-4 py-2 text-xs font-bold text-slate-900 shadow-lg backdrop-blur-sm">
                     {post.category.name}
-                  </span>
+                  </div>
                 )}
-              </div>
 
-              <p className="mb-4">{summary}</p>
+                <div className="p-8">
+                  <h2 className="mb-4 text-2xl font-bold text-slate-900 transition-colors group-hover:text-blue-600">
+                    {post.title}
+                  </h2>
 
-              <div className="flex gap-2 mb-4 flex-wrap">
-                {post.tags?.map((tag) => (
-                  <span key={tag} className="bg-blue-100 px-2 py-1 rounded text-sm">
-                    #{tag}
-                  </span>
-                ))}
-              </div>
+                  <div className="mb-4 flex items-center gap-4 text-sm text-slate-500">
+                    <span className="flex items-center gap-1.5">
+                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                      {post.author?.name ?? 'Andy Schlegel'}
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      {publishedDate}
+                    </span>
+                  </div>
 
-              <div className="flex justify-between items-center">
-                <span>❤️ {post.metrics?.likes ?? 0} Likes</span>
-                <a href={`/blog/${post.slug}`} className="text-blue-500">
-                  Weiterlesen →
-                </a>
-              </div>
-            </article>
-          )
-        })}
+                  <p className="mb-6 line-clamp-3 leading-relaxed text-slate-600">
+                    {summary}
+                  </p>
 
-        {filteredPosts.length === 0 && (
-          <div className="text-gray-500">Keine Posts gefunden.</div>
+                  {/* Tags */}
+                  {post.tags && post.tags.length > 0 && (
+                    <div className="mb-6 flex flex-wrap gap-2">
+                      {post.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 transition-all hover:bg-gradient-to-r hover:from-blue-100 hover:to-purple-100 hover:text-blue-700"
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Footer */}
+                  <div className="flex items-center justify-between border-t border-slate-100 pt-4">
+                    <div className="flex items-center gap-4 text-sm text-slate-500">
+                      <span className="flex items-center gap-1.5">
+                        <svg className="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                        </svg>
+                        {post.metrics?.likes ?? 0}
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <svg className="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        {post.metrics?.views ?? 0}
+                      </span>
+                    </div>
+
+                    <Link
+                      href={`/blog/${post.slug}`}
+                      className="flex items-center gap-2 font-semibold text-blue-600 transition-all group-hover:gap-3"
+                    >
+                      Weiterlesen
+                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Gradient Border on Hover */}
+                <div className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-20" />
+              </article>
+            );
+          })}
+        </div>
+
+        {/* Empty State */}
+        {filteredPosts.length === 0 && !loading && (
+          <div className="rounded-3xl bg-white p-16 text-center shadow-xl">
+            <div className="mb-6 text-7xl">📝</div>
+            <h3 className="mb-3 text-2xl font-bold text-slate-900">Keine Posts gefunden</h3>
+            <p className="text-slate-600">
+              {filter ? 'Versuche einen anderen Suchbegriff.' : 'Noch keine Blog-Posts verfügbar.'}
+            </p>
+          </div>
         )}
       </div>
     </div>
-  )
+  );
 }
