@@ -1,0 +1,51 @@
+name: Test & Lint
+
+on:
+  pull_request:
+    branches:
+      - main
+      - developer
+  push:
+    branches:
+      - developer
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: blog-app/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./blog-app
+        run: npm ci
+
+      - name: Run ESLint
+        working-directory: ./blog-app
+        run: npm run lint
+
+      - name: Build production
+        working-directory: ./blog-app
+        run: npm run build
+        env:
+          MONGODB_URI: mongodb://localhost:27017/test-db
+          JWT_SECRET: test-secret-for-ci
+
+      - name: Check build output
+        working-directory: ./blog-app
+        run: |
+          if [ -d ".next" ]; then
+            echo "✅ Build successful - .next directory created"
+          else
+            echo "❌ Build failed - .next directory not found"
+            exit 1
+          fi
