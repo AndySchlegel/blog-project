@@ -1,29 +1,38 @@
 import { NextResponse } from 'next/server'
 
-const TOKEN_NAME = 'auth_token'
-const AUTH_ROUTES = ['/login', '/register']
-const PROTECTED_ROUTES = ['/dashboard']
-
 export function middleware (request) {
   const { pathname } = request.nextUrl
-  const token = request.cookies.get(TOKEN_NAME)?.value
 
-  const isAuthRoute = AUTH_ROUTES.some(route => pathname.startsWith(route))
-  const isProtectedRoute = PROTECTED_ROUTES.some(route => pathname.startsWith(route))
-
-  if (!token && isProtectedRoute) {
-    const loginUrl = new URL('/login', request.url)
-    loginUrl.searchParams.set('callbackUrl', pathname)
-    return NextResponse.redirect(loginUrl)
+  // Erlaube Zugriff auf die Passwort-Seite und deren Assets
+  if (
+    pathname === '/site-access' ||
+    pathname.startsWith('/_next') ||
+    pathname === '/favicon.ico'
+  ) {
+    return NextResponse.next()
   }
 
-  if (token && isAuthRoute) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+  // Prüfe ob der Site-Access-Cookie gesetzt ist
+  const siteAccessToken = request.cookies.get('site-access-token')
+
+  if (!siteAccessToken || siteAccessToken.value !== process.env.SITE_ACCESS_SECRET) {
+    // Redirect zur Passwort-Seite
+    const url = request.nextUrl.clone()
+    url.pathname = '/site-access'
+    return NextResponse.redirect(url)
   }
 
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: ['/login', '/register', '/dashboard/:path*']
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!_next/static|_next/image|favicon.ico).*)'
+  ]
 }
