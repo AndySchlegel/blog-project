@@ -26,7 +26,6 @@ export default function SiteAccessPage () {
       const data = await response.json()
 
       if (response.ok) {
-        // Cookie wurde gesetzt, reload the page
         window.location.href = '/'
       } else {
         setErrorMessage(data.error || 'Falsches Passwort')
@@ -43,7 +42,7 @@ export default function SiteAccessPage () {
     <div className="flex min-h-screen items-center justify-center bg-slate-100">
       <section className="mx-auto w-full max-w-md rounded-lg border bg-white p-8 shadow-lg">
         <h1 className="mb-2 text-3xl font-bold text-slate-900">
-          Zugang geschützt
+          Zugang geschuetzt
         </h1>
         <p className="mb-6 text-sm text-slate-600">
           Bitte gib das Passwort ein, um auf diese Website zuzugreifen.
@@ -70,7 +69,7 @@ export default function SiteAccessPage () {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              placeholder=""""""""""
+              placeholder="Enter password"
               required
               autoFocus
             />
@@ -81,7 +80,7 @@ export default function SiteAccessPage () {
             className="w-full rounded bg-blue-600 px-4 py-2.5 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Wird geprüft&' : 'Zugriff freischalten'}
+            {isSubmitting ? 'Wird geprueft...' : 'Zugriff freischalten'}
           </button>
         </form>
       </section>

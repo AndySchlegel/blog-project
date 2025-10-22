@@ -21,13 +21,13 @@ export async function POST (request) {
       )
     }
 
-    // Generiere ein Secret-Token für den Cookie
+    // Generiere ein Secret-Token fuer den Cookie
     const secret = process.env.SITE_ACCESS_SECRET || 'default-secret-change-me'
 
     // Erstelle Response mit Cookie
     const response = NextResponse.json({ success: true })
 
-    // Setze Cookie für 30 Tage
+    // Setze Cookie fuer 30 Tage
     response.cookies.set('site-access-token', secret, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
