@@ -80,6 +80,7 @@ export default async function PostsPage() {
                     alt={post.title}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-110"
+                    unoptimized
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
