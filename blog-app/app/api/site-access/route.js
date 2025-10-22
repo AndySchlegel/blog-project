@@ -7,7 +7,14 @@ export async function POST (request) {
     // Vergleiche das eingegebene Passwort mit dem in der .env.local gespeicherten
     const correctPassword = process.env.SITE_ACCESS_PASSWORD
 
+    console.log('Password check:', {
+      received: password,
+      expected: correctPassword,
+      match: password === correctPassword
+    })
+
     if (!correctPassword) {
+      console.error('SITE_ACCESS_PASSWORD not set in environment')
       return NextResponse.json(
         { error: 'Server-Konfigurationsfehler: SITE_ACCESS_PASSWORD nicht gesetzt' },
         { status: 500 }
@@ -15,11 +22,14 @@ export async function POST (request) {
     }
 
     if (password !== correctPassword) {
+      console.log('Password mismatch')
       return NextResponse.json(
         { error: 'Falsches Passwort' },
         { status: 401 }
       )
     }
+
+    console.log('Password correct, setting cookie')
 
     // Generiere ein Secret-Token fuer den Cookie
     const secret = process.env.SITE_ACCESS_SECRET || 'default-secret-change-me'
