@@ -5,6 +5,65 @@ import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 
+function PostMetrics({ postId, initialLikes, initialViews }) {
+  const [likes, setLikes] = useState(initialLikes);
+  const [views, setViews] = useState(initialViews);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isLiking, setIsLiking] = useState(false);
+
+  const handleLike = async (e) => {
+    e.preventDefault();
+    if (isLiking) return;
+
+    setIsLiking(true);
+    try {
+      const response = await fetch(`/api/posts/${postId}/like`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setLikes(result.data.likeCount);
+        setIsLiked(result.data.liked);
+      }
+    } catch (error) {
+      console.error('Fehler beim Liken:', error);
+    } finally {
+      setIsLiking(false);
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-4 text-sm text-slate-500">
+      <button
+        onClick={handleLike}
+        disabled={isLiking}
+        className="flex items-center gap-1.5 transition-all hover:scale-110 disabled:opacity-50"
+      >
+        <svg
+          className={`h-5 w-5 transition-colors ${isLiked ? 'text-red-500 fill-current' : 'text-red-500'}`}
+          fill={isLiked ? 'currentColor' : 'none'}
+          stroke={isLiked ? 'none' : 'currentColor'}
+          strokeWidth={isLiked ? 0 : 2}
+          viewBox="0 0 24 24"
+        >
+          <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+        </svg>
+        <span className={isLiked ? 'font-bold text-red-500' : ''}>{likes}</span>
+      </button>
+      <span className="flex items-center gap-1.5">
+        <svg className="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+        </svg>
+        {views}
+      </span>
+    </div>
+  );
+}
+
 const dateFormatter = new Intl.DateTimeFormat('de-DE', {
   timeZone: 'Europe/Berlin',
   day: '2-digit',
@@ -144,8 +203,20 @@ export default function BlogPage() {
   };
 
   const filteredPosts = posts.filter((post) => {
-    const haystack = `${post.title ?? ''} ${post.content ?? ''}`.toLowerCase();
-    return haystack.includes(filter.toLowerCase());
+    if (!filter) return true;
+
+    const searchTerm = filter.toLowerCase();
+    const title = (post.title ?? '').toLowerCase();
+    const content = (post.content ?? '').toLowerCase();
+    const excerpt = (post.excerpt ?? '').toLowerCase();
+    const category = (post.category?.name ?? '').toLowerCase();
+    const tags = (post.tags ?? []).join(' ').toLowerCase();
+
+    return title.includes(searchTerm) ||
+           content.includes(searchTerm) ||
+           excerpt.includes(searchTerm) ||
+           category.includes(searchTerm) ||
+           tags.includes(searchTerm);
   });
 
   if (loading) {
@@ -223,12 +294,54 @@ export default function BlogPage() {
             </div>
             <input
               type="text"
-              placeholder="Posts durchsuchen..."
+              placeholder="Suche nach Titel, Kategorie, Tags oder Inhalt..."
               value={filter}
               onChange={(event) => setFilter(event.target.value)}
-              className="w-full rounded-2xl border border-slate-200 bg-white py-4 pl-12 pr-4 text-slate-900 shadow-lg transition-all placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/20"
+              className="w-full rounded-2xl border border-slate-200 bg-white py-4 pl-12 pr-12 text-slate-900 shadow-lg transition-all placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/20"
             />
+            {filter && (
+              <button
+                onClick={() => setFilter('')}
+                className="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 transition-colors hover:text-slate-600"
+                aria-label="Suche zurücksetzen"
+              >
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
           </div>
+          {filter && filteredPosts.length > 0 && (
+            <div className="mt-4">
+              <p className="mb-3 text-sm font-semibold text-slate-700">
+                {filteredPosts.length} {filteredPosts.length === 1 ? 'Ergebnis' : 'Ergebnisse'} gefunden:
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {filteredPosts.slice(0, 5).map((post) => (
+                  <Link
+                    key={post._id}
+                    href={`#post-${post._id}`}
+                    className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 ring-1 ring-blue-200 transition-all hover:bg-blue-100 hover:scale-105"
+                  >
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    {post.title}
+                  </Link>
+                ))}
+                {filteredPosts.length > 5 && (
+                  <span className="inline-flex items-center rounded-full bg-slate-100 px-4 py-2 text-sm text-slate-600">
+                    +{filteredPosts.length - 5} weitere
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+          {filter && filteredPosts.length === 0 && (
+            <p className="mt-2 text-sm text-slate-500">
+              Keine Ergebnisse für "{filter}"
+            </p>
+          )}
         </div>
 
         {/* Create Post Section */}
@@ -405,13 +518,13 @@ export default function BlogPage() {
             <div className="flex items-center justify-center gap-4">
               <Link
                 href="/login"
-                className="rounded-full bg-white px-6 py-3 font-bold text-blue-600 transition-all hover:scale-105"
+                className="rounded-full border-2 border-white bg-white/10 px-6 py-3 font-bold text-white backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-105"
               >
                 Anmelden
               </Link>
               <Link
                 href="/register"
-                className="rounded-full border-2 border-white px-6 py-3 font-bold text-white transition-all hover:bg-white/10"
+                className="rounded-full border-2 border-white bg-white/10 px-6 py-3 font-bold text-white backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-105"
               >
                 Registrieren
               </Link>
@@ -428,16 +541,19 @@ export default function BlogPage() {
             return (
               <article
                 key={post._id}
-                className="group relative overflow-hidden rounded-3xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                id={`post-${post._id}`}
+                className="group relative overflow-hidden rounded-3xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl scroll-mt-24"
               >
-                {/* Category Badge */}
-                {post.category?.name && (
-                  <div className="absolute right-4 top-4 z-10 rounded-full bg-white/95 px-4 py-2 text-xs font-bold text-slate-900 shadow-lg backdrop-blur-sm">
-                    {post.category.name}
-                  </div>
-                )}
-
                 <div className="p-8">
+                  {/* Category Badge - Right Aligned */}
+                  {post.category?.name && (
+                    <div className="mb-4 flex justify-end">
+                      <div className="inline-flex rounded-full bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-2 text-xs font-bold text-blue-700 ring-1 ring-blue-200/50">
+                        {post.category.name}
+                      </div>
+                    </div>
+                  )}
+
                   <h2 className="mb-4 text-2xl font-bold text-slate-900 transition-colors group-hover:text-blue-600">
                     {post.title}
                   </h2>
@@ -477,21 +593,7 @@ export default function BlogPage() {
 
                   {/* Footer */}
                   <div className="flex items-center justify-between border-t border-slate-100 pt-4">
-                    <div className="flex items-center gap-4 text-sm text-slate-500">
-                      <span className="flex items-center gap-1.5">
-                        <svg className="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-                        </svg>
-                        {post.metrics?.likes ?? 0}
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <svg className="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                        {post.metrics?.views ?? 0}
-                      </span>
-                    </div>
+                    <PostMetrics postId={post._id} initialLikes={post.metrics?.likes ?? 0} initialViews={post.metrics?.views ?? 0} />
 
                     <Link
                       href={`/blog/${post.slug}`}

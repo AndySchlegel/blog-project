@@ -22,7 +22,7 @@ export default function Footer() {
                   A
                 </div>
                 <div>
-                  <div className="text-xl font-bold">Andy's Tech Hub</div>
+                  <div className="text-xl font-bold">Andy&apos;s Tech Hub</div>
                   <div className="text-sm text-blue-200">DevOps & Cloud Engineering</div>
                 </div>
               </div>
@@ -83,7 +83,7 @@ export default function Footer() {
           <div className="container mx-auto px-4 py-6">
             <div className="flex flex-col items-center justify-between gap-4 text-sm md:flex-row">
               <p className="text-slate-400">
-                &copy; {currentYear} Andy's Tech Hub. Made with ❤️ and lots of ☕
+                &copy; {currentYear} Andy&apos;s Tech Hub. Made with ❤️ and lots of ☕
               </p>
               <div className="flex items-center gap-4 text-slate-400">
                 <span>Built with</span>

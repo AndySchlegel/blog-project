@@ -75,7 +75,7 @@ export default function Navigation() {
               A
             </div>
             <div className="hidden sm:block">
-              <div className="text-lg font-bold text-slate-900">Andy's Tech Hub</div>
+              <div className="text-lg font-bold text-slate-900">Andy&apos;s Tech Hub</div>
               <div className="text-xs text-slate-500">DevOps & Cloud</div>
             </div>
           </Link>

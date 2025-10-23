@@ -4,6 +4,7 @@ import Post from '@/models/Post'
 import User from '@/models/User'
 
 export const POST = apiHandler(async (request, { params }) => {
+  const resolvedParams = await params
   const body = await request.json()
   let userId = body.userId
 
@@ -19,7 +20,7 @@ export const POST = apiHandler(async (request, { params }) => {
     throw new ApiError('User-ID ist ungültig.', 400)
   }
 
-  const postFilter = mongoose.isValidObjectId(params.id) ? { _id: params.id } : { slug: params.id }
+  const postFilter = mongoose.isValidObjectId(resolvedParams.id) ? { _id: resolvedParams.id } : { slug: resolvedParams.id }
   const post = await Post.findOne(postFilter)
   if (!post) {
     throw new ApiError('Post wurde nicht gefunden.', 404)

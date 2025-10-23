@@ -403,14 +403,14 @@ export default function About() {
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="rounded-3xl bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 p-12 text-center text-white shadow-2xl">
-            <h2 className="mb-4 text-4xl font-black">Let's Connect!</h2>
+            <h2 className="mb-4 text-4xl font-black">Let&apos;s Connect!</h2>
             <p className="mx-auto mb-8 max-w-2xl text-lg text-blue-100">
               Fragen zu AWS? Docker? Homelab-Setup? Oder einfach nur Tech-Talk?
               Ich freue mich über jede Nachricht!
             </p>
             <a
               href="/contact"
-              className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-lg font-bold text-slate-900 shadow-xl transition-all hover:scale-105 hover:shadow-2xl"
+              className="inline-flex items-center gap-2 rounded-full border-2 border-white bg-white/10 px-8 py-4 text-lg font-bold text-white backdrop-blur-sm shadow-xl transition-all hover:scale-105 hover:bg-white/20 hover:shadow-2xl"
             >
               Kontakt aufnehmen
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

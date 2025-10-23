@@ -3,7 +3,8 @@ import { apiHandler, ApiError } from '@/lib/apiHandler'
 import Post from '@/models/Post'
 
 export const POST = apiHandler(async (request, { params }) => {
-  const filter = mongoose.isValidObjectId(params.id) ? { _id: params.id } : { slug: params.id }
+  const resolvedParams = await params
+  const filter = mongoose.isValidObjectId(resolvedParams.id) ? { _id: resolvedParams.id } : { slug: resolvedParams.id }
   const post = await Post.findOne(filter)
 
   if (!post) {

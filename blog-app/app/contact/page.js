@@ -54,6 +54,14 @@ const faqs = [
   {
     question: 'Wie lange dauert eine Antwort?',
     answer: 'In der Regel antworte ich innerhalb von 1-2 Tagen. Bei komplexeren Anfragen kann es etwas länger dauern.'
+  },
+  {
+    question: 'Welche Technologien nutzt du?',
+    answer: 'Hauptsächlich arbeite ich mit Java, Docker, Kubernetes, AWS und verschiedenen DevOps-Tools. Details findest du in meinen Blog-Posts!'
+  },
+  {
+    question: 'Kann ich bei deinen Projekten mithelfen?',
+    answer: 'Sehr gerne! Schau dir meine GitHub-Repos an und öffne gerne Pull Requests oder Issues. Feedback ist immer willkommen!'
   }
 ];
 
@@ -155,9 +163,41 @@ export default function ContactPage() {
           ))}
         </div>
 
-        {/* Contact Form */}
-        <div className="grid gap-12 lg:grid-cols-2">
-          {/* Form */}
+        {/* 1. FAQs - Full Width with 3 columns */}
+        <div className="mb-12 overflow-hidden rounded-3xl bg-white p-8 shadow-xl">
+          <div className="mb-6 flex items-center gap-3">
+            <svg className="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h3 className="text-2xl font-bold text-slate-900">Häufige Fragen</h3>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {faqs.map((faq, index) => (
+              <details
+                key={index}
+                className="group rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 transition-all hover:shadow-lg"
+              >
+                <summary className="flex cursor-pointer items-start justify-between gap-3 p-6 font-bold text-slate-900 transition-colors group-hover:text-blue-600">
+                  <span className="text-base">{faq.question}</span>
+                  <svg
+                    className="mt-1 h-5 w-5 flex-shrink-0 text-slate-400 transition-transform group-open:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <div className="border-t border-white/50 px-6 pb-6 pt-4">
+                  <p className="leading-relaxed text-slate-600">{faq.answer}</p>
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+
+        {/* 2. Contact Form - Full Width */}
+        <div className="mb-12">
           <div className="overflow-hidden rounded-3xl bg-white shadow-xl">
             <div className="border-b border-slate-100 bg-gradient-to-r from-blue-50 to-purple-50 p-8">
               <h2 className="flex items-center gap-3 text-3xl font-black text-slate-900">
@@ -271,68 +311,43 @@ export default function ContactPage() {
               </form>
             </div>
           </div>
+        </div>
 
-          {/* FAQ */}
-          <div>
-            <div className="mb-8">
-              <h2 className="mb-4 text-3xl font-black text-slate-900">
-                Häufige <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Fragen</span>
-              </h2>
-              <p className="text-lg text-slate-600">Vielleicht findest du hier schon die Antwort!</p>
-            </div>
-
-            <div className="space-y-4">
-              {faqs.map((faq, index) => (
-                <details
-                  key={index}
-                  className="group overflow-hidden rounded-2xl bg-white shadow-lg transition-all hover:shadow-xl"
-                >
-                  <summary className="flex cursor-pointer items-center justify-between p-6 font-bold text-slate-900 transition-colors group-hover:text-blue-600">
-                    <span className="text-lg">{faq.question}</span>
-                    <svg
-                      className="h-6 w-6 flex-shrink-0 transition-transform group-open:rotate-180"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </summary>
-                  <div className="border-t border-slate-100 bg-slate-50 p-6">
-                    <p className="leading-relaxed text-slate-600">{faq.answer}</p>
-                  </div>
-                </details>
-              ))}
-            </div>
-
-            {/* Info Box */}
-            <div className="mt-8 overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 to-purple-600 p-8 text-white shadow-2xl">
-              <div className="mb-4 flex items-center gap-3">
-                <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <h3 className="text-2xl font-bold">Quick Info</h3>
+        {/* 3. Quick Info - Full Width with 3 columns */}
+        <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 to-purple-600 p-8 text-white shadow-xl">
+          <div className="mb-6 flex items-center gap-3">
+            <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h3 className="text-2xl font-bold">Quick Info</h3>
+          </div>
+          <div className="grid gap-6 md:grid-cols-3">
+            <div className="flex items-start gap-3">
+              <svg className="mt-1 h-6 w-6 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <div>
+                <div className="font-bold text-white">Antwortzeit</div>
+                <div className="text-blue-100">1-2 Werktage</div>
               </div>
-              <ul className="space-y-3 text-blue-100">
-                <li className="flex items-start gap-2">
-                  <svg className="mt-0.5 h-5 w-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  Antwortzeit: 1-2 Werktage
-                </li>
-                <li className="flex items-start gap-2">
-                  <svg className="mt-0.5 h-5 w-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  Zeitzone: Europe/Berlin (CET/CEST)
-                </li>
-                <li className="flex items-start gap-2">
-                  <svg className="mt-0.5 h-5 w-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  Sprache: Deutsch & English
-                </li>
-              </ul>
+            </div>
+            <div className="flex items-start gap-3">
+              <svg className="mt-1 h-6 w-6 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <div>
+                <div className="font-bold text-white">Zeitzone</div>
+                <div className="text-blue-100">Europe/Berlin (CET/CEST)</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <svg className="mt-1 h-6 w-6 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <div>
+                <div className="font-bold text-white">Sprachen</div>
+                <div className="text-blue-100">Deutsch & English</div>
+              </div>
             </div>
           </div>
         </div>
