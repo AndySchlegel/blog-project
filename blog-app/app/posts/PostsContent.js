@@ -96,7 +96,7 @@ export default function PostsContent() {
           </div>
           {activeCategoryName && (
             <p className="mt-4 text-sm text-slate-600">
-              Zeige <span className="font-semibold">{filteredPosts.length}</span> {filteredPosts.length === 1 ? 'Post' : 'Posts'} in "{activeCategoryName}"
+              Zeige <span className="font-semibold">{filteredPosts.length}</span> {filteredPosts.length === 1 ? 'Post' : 'Posts'} in &quot;{activeCategoryName}&quot;
             </p>
           )}
         </header>

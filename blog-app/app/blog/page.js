@@ -339,7 +339,7 @@ export default function BlogPage() {
           )}
           {filter && filteredPosts.length === 0 && (
             <p className="mt-2 text-sm text-slate-500">
-              Keine Ergebnisse für "{filter}"
+              Keine Ergebnisse für &quot;{filter}&quot;
             </p>
           )}
         </div>
