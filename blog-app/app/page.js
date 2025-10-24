@@ -15,13 +15,27 @@ async function getFeaturedPosts() {
     .limit(3)
     .lean();
 
-  return posts.map(post => ({
-    ...post,
+  // Fully serialize to plain objects for client components
+  return JSON.parse(JSON.stringify(posts.map(post => ({
     _id: post._id.toString(),
-    author: post.author ? { ...post.author, _id: post.author._id.toString() } : null,
-    category: post.category ? { ...post.category, _id: post.category._id.toString() } : null,
+    title: post.title || '',
+    excerpt: post.excerpt || '',
+    slug: post.slug || '',
+    coverImage: post.coverImage || null,
+    readTime: post.readTime || 5,
+    author: post.author ? {
+      _id: post.author._id?.toString() || '',
+      name: post.author.name || 'Unknown'
+    } : null,
+    category: post.category ? {
+      _id: post.category._id?.toString() || '',
+      name: post.category.name || '',
+      slug: post.category.slug || ''
+    } : null,
     publishedAt: post.publishedAt?.toISOString() || null,
-  }));
+    createdAt: post.createdAt?.toISOString() || null,
+    updatedAt: post.updatedAt?.toISOString() || null
+  }))));
 }
 
 export default async function Home() {
