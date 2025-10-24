@@ -1,7 +1,45 @@
+'use client';
+
 import Link from 'next/link';
+import { useState } from 'react';
 
 export default function Footer() {
   const currentYear = new Date().getUTCFullYear();
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState('idle'); // idle, loading, success, error
+  const [message, setMessage] = useState('');
+
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault();
+    setStatus('loading');
+    setMessage('');
+
+    try {
+      const response = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setStatus('success');
+        setMessage('Erfolgreich angemeldet! 🎉');
+        setEmail('');
+        setTimeout(() => {
+          setStatus('idle');
+          setMessage('');
+        }, 5000);
+      } else {
+        setStatus('error');
+        setMessage(data.error || 'Ein Fehler ist aufgetreten');
+      }
+    } catch (error) {
+      setStatus('error');
+      setMessage('Netzwerkfehler. Bitte versuche es später erneut.');
+    }
+  };
 
   return (
     <footer className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white">
@@ -12,6 +50,75 @@ export default function Footer() {
       </div>
 
       <div className="relative">
+        {/* Newsletter Section - Only visible on mobile (hidden on lg+ where sidebar shows) */}
+        <div className="border-b border-white/10 lg:hidden">
+          <div className="container mx-auto px-4 py-12">
+            <div className="mx-auto max-w-2xl text-center">
+              <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 shadow-xl">
+                <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 className="mb-3 text-2xl font-bold text-white md:text-3xl">
+                Bleib auf dem Laufenden
+              </h3>
+              <p className="mb-6 text-sm text-slate-300 md:text-base">
+                Neue Tutorials, Cloud-Tipps und DevOps-Tricks direkt in dein Postfach. Keine Spam, versprochen!
+              </p>
+
+              <form onSubmit={handleNewsletterSubmit} className="mx-auto max-w-md">
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="deine@email.de"
+                    required
+                    disabled={status === 'loading'}
+                    className="flex-1 rounded-xl border-2 border-white/20 bg-white/10 px-4 py-3 text-white placeholder-slate-400 backdrop-blur-sm transition-all focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/50 disabled:cursor-not-allowed disabled:opacity-50"
+                  />
+                  <button
+                    type="submit"
+                    disabled={status === 'loading'}
+                    className="rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 px-6 py-3 font-bold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
+                    style={{ color: '#ffffff' }}
+                  >
+                    {status === 'loading' ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <svg className="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                      </span>
+                    ) : (
+                      'Abonnieren'
+                    )}
+                  </button>
+                </div>
+
+                {message && (
+                  <div className={`mt-4 flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm ${
+                    status === 'success'
+                      ? 'bg-green-500/20 text-green-200 ring-1 ring-green-500/30'
+                      : 'bg-red-500/20 text-red-200 ring-1 ring-red-500/30'
+                  }`}>
+                    {status === 'success' ? (
+                      <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                    ) : (
+                      <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                    <span>{message}</span>
+                  </div>
+                )}
+              </form>
+            </div>
+          </div>
+        </div>
+
         {/* Main Footer Content */}
         <div className="container mx-auto px-4 py-16">
           <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
