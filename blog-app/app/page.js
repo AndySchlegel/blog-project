@@ -70,21 +70,20 @@ export default async function Home() {
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/posts"
-                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-white px-8 py-4 text-lg font-bold text-slate-900 shadow-2xl transition-all hover:scale-105 hover:shadow-blue-500/50"
+                className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 text-lg font-bold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
               >
-                <span className="relative z-10">Zum Knowledge Hub</span>
-                <svg className="relative z-10 h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <span>Zum Knowledge Hub</span>
+                <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
-                <div className="absolute inset-0 -z-0 bg-gradient-to-r from-blue-400 to-purple-400 opacity-0 transition-opacity group-hover:opacity-20" />
               </Link>
 
               <Link
                 href="/blog"
-                className="group inline-flex items-center gap-2 rounded-full border-2 border-white/30 bg-white/10 px-8 py-4 text-lg font-bold text-white backdrop-blur-sm transition-all hover:border-white/50 hover:bg-white/20"
+                className="group inline-flex items-center gap-2 rounded-full border-2 border-white bg-white/10 px-8 py-4 text-lg font-bold text-white backdrop-blur-sm transition-all hover:scale-105 hover:bg-white/20"
               >
                 <span>Meine Projekte</span>
-                <svg className="h-5 w-5 transition-transform group-hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
               </Link>
@@ -224,21 +223,49 @@ export default async function Home() {
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { icon: '☁️', title: 'AWS & Cloud', desc: 'Zertifizierungen, Best Practices, Real-World Setups' },
-              { icon: '🐳', title: 'DevOps & Docker', desc: 'CI/CD, Container, Kubernetes, Infrastructure as Code' },
-              { icon: '🏠', title: 'Homelab & NAS', desc: 'Synology, Self-Hosting, Private Cloud' },
-              { icon: '🔒', title: 'Networking', desc: 'VPN, Reverse Proxy, Traefik, Tailscale' }
-            ].map((item, index) => (
-              <div
-                key={index}
-                className="group rounded-2xl border-2 border-slate-200 bg-white p-6 transition-all hover:border-blue-500 hover:shadow-xl"
-              >
-                <div className="mb-4 text-4xl">{item.icon}</div>
-                <h3 className="mb-2 text-lg font-bold text-slate-900">{item.title}</h3>
-                <p className="text-sm text-slate-600">{item.desc}</p>
+            {/* AWS & Cloud */}
+            <div className="group rounded-2xl border-2 border-slate-200 bg-white p-6 transition-all hover:border-blue-500 hover:shadow-xl">
+              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400 shadow-lg">
+                <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                </svg>
               </div>
-            ))}
+              <h3 className="mb-2 text-lg font-bold text-slate-900">AWS & Cloud</h3>
+              <p className="text-sm text-slate-600">Zertifizierungen, Best Practices, Real-World Setups</p>
+            </div>
+
+            {/* DevOps & Docker */}
+            <div className="group rounded-2xl border-2 border-slate-200 bg-white p-6 transition-all hover:border-blue-500 hover:shadow-xl">
+              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-400 shadow-lg">
+                <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                </svg>
+              </div>
+              <h3 className="mb-2 text-lg font-bold text-slate-900">DevOps & Docker</h3>
+              <p className="text-sm text-slate-600">CI/CD, Container, Kubernetes, Infrastructure as Code</p>
+            </div>
+
+            {/* Homelab & NAS */}
+            <div className="group rounded-2xl border-2 border-slate-200 bg-white p-6 transition-all hover:border-blue-500 hover:shadow-xl">
+              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-blue-400 shadow-lg">
+                <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+                </svg>
+              </div>
+              <h3 className="mb-2 text-lg font-bold text-slate-900">Homelab & NAS</h3>
+              <p className="text-sm text-slate-600">Synology, Self-Hosting, Private Cloud</p>
+            </div>
+
+            {/* Networking */}
+            <div className="group rounded-2xl border-2 border-slate-200 bg-white p-6 transition-all hover:border-blue-500 hover:shadow-xl">
+              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-400 shadow-lg">
+                <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                </svg>
+              </div>
+              <h3 className="mb-2 text-lg font-bold text-slate-900">Networking</h3>
+              <p className="text-sm text-slate-600">VPN, Reverse Proxy, Traefik, Tailscale</p>
+            </div>
           </div>
         </div>
       </section>
