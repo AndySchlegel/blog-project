@@ -196,13 +196,15 @@ export default async function Home() {
           </div>
 
           {/* View All Button */}
-          <div className="mt-12 flex justify-center gap-4">
-            <Link
-              href="/posts"
-              className="rounded-full border-2 border-slate-600 bg-slate-600/10 px-6 py-3 font-bold text-slate-700 backdrop-blur-sm transition-all hover:scale-105 hover:bg-slate-600/20"
-            >
-              Alle Tutorials ansehen
-            </Link>
+          <div className="mt-12 flex justify-center">
+            <div className="rounded-3xl bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 p-8">
+              <Link
+                href="/posts"
+                className="rounded-full border-2 border-white bg-white/10 px-6 py-3 font-bold text-white backdrop-blur-sm transition-all hover:scale-105 hover:bg-white/20"
+              >
+                Alle Tutorials ansehen
+              </Link>
+            </div>
           </div>
         </div>
       </section>
