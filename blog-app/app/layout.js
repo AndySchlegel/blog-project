@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="de">
       <body className="bg-slate-50 text-slate-900 antialiased">
         <AuthProvider>
           <ConditionalLayout>{children}</ConditionalLayout>
