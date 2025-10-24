@@ -57,19 +57,20 @@ export default function PostsContent() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 py-8 sm:py-16 sm:px-6 lg:px-8">
         {/* Header */}
-        <header className="mb-12 text-center">
-          <h1 className="mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text pb-2 text-6xl font-extrabold leading-tight text-transparent">
+        <header className="mb-8 text-center sm:mb-12">
+          <h1 className="mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text pb-2 text-4xl font-extrabold leading-tight text-transparent sm:mb-6 sm:text-6xl">
             Tech Knowledge Base
           </h1>
-          <p className="mx-auto flex max-w-3xl items-center justify-center gap-2 text-xl font-medium text-slate-700">
-            <svg className="h-6 w-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+          <p className="mx-auto flex max-w-3xl items-center justify-center gap-2 text-base font-medium text-slate-700 sm:text-xl">
+            <svg className="h-5 w-5 flex-shrink-0 text-blue-600 sm:h-6 sm:w-6" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clipRule="evenodd" />
             </svg>
-            Von AWS bis Self-Hosting: Praxisnahe Guides, die wirklich funktionieren.
+            <span className="hidden sm:inline">Von AWS bis Self-Hosting: Praxisnahe Guides, die wirklich funktionieren.</span>
+            <span className="sm:hidden">Praxisnahe Tech Guides</span>
           </p>
-          <p className="mx-auto mt-3 max-w-2xl text-base text-slate-600">
+          <p className="mx-auto mt-2 max-w-2xl text-sm text-slate-600 sm:mt-3 sm:text-base">
             Keine Theorie-Wüste. Echte Tutorials mit Code, Screenshots und Troubleshooting-Tipps.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-2">
@@ -105,7 +106,7 @@ export default function PostsContent() {
         </header>
 
         {/* Posts Grid */}
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
           {filteredPosts.map(post => (
             <Link
               key={post._id}

@@ -250,7 +250,7 @@ export default function BlogPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 pb-20 pt-24">
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 pb-16 pt-20 sm:pb-20 sm:pt-24">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute left-1/4 top-1/4 h-96 w-96 animate-pulse rounded-full bg-blue-500 blur-3xl" />
           <div className="absolute right-1/4 top-1/3 h-96 w-96 animate-pulse rounded-full bg-purple-500 blur-3xl animation-delay-2000" />
@@ -258,19 +258,20 @@ export default function BlogPage() {
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm ring-1 ring-white/20">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm ring-1 ring-white/20 sm:mb-6 sm:px-4 sm:py-2 sm:text-sm">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
               </span>
-              Persönliche Erfahrungen & Projekt-Logs
+              <span className="hidden sm:inline">Persönliche Erfahrungen & Projekt-Logs</span>
+              <span className="sm:hidden">Tech Blog</span>
             </div>
 
-            <h1 className="mb-6 text-6xl font-black tracking-tight text-white sm:text-7xl">
+            <h1 className="mb-4 text-4xl font-black tracking-tight text-white sm:mb-6 sm:text-6xl lg:text-7xl">
               Mein Tech <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Blog</span>
             </h1>
 
-            <p className="mx-auto max-w-3xl text-xl leading-relaxed text-blue-100">
+            <p className="mx-auto max-w-3xl text-base leading-relaxed text-blue-100 sm:text-xl">
               Behind the Scenes meiner Projekte. Von ersten Ideen über Debugging-Sessions bis zum Production Deployment.
             </p>
           </div>
@@ -283,7 +284,7 @@ export default function BlogPage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:py-16 sm:px-6 lg:px-8">
         {/* Search Bar */}
         <div className="mb-12">
           <div className="relative">
@@ -533,7 +534,7 @@ export default function BlogPage() {
         )}
 
         {/* Blog Posts Grid */}
-        <div className="grid gap-8 lg:grid-cols-2">
+        <div className="grid gap-6 sm:gap-8 lg:grid-cols-2">
           {filteredPosts.map((post) => {
             const summary = post.summary ?? `${post.excerpt ?? post.content?.substring(0, 200) ?? ''}...`;
             const publishedDate = post.publishedAt ? dateFormatter.format(new Date(post.publishedAt)) : 'Unveröffentlicht';

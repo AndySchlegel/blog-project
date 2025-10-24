@@ -1,42 +1,43 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function SearchBar() {
   const [term, setTerm] = useState('');
-  const [lastSearch, setLastSearch] = useState('');
+  const router = useRouter();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setLastSearch(term.trim());
+    if (term.trim()) {
+      router.push(`/blog?search=${encodeURIComponent(term.trim())}`);
+    }
   };
 
   return (
-    <div className="flex flex-col gap-1 text-sm">
-      <form className="flex items-center gap-2" onSubmit={handleSubmit}>
-        <label className="sr-only" htmlFor="nav-search">
-          Search posts
-        </label>
+    <form className="hidden md:block" onSubmit={handleSubmit}>
+      <label className="sr-only" htmlFor="nav-search">
+        Search posts
+      </label>
+      <div className="relative">
         <input
           id="nav-search"
           value={term}
           onChange={(event) => setTerm(event.target.value)}
-          className="rounded-md border border-white/30 bg-white/10 px-3 py-2 text-white placeholder:text-white/70 focus:border-white focus:outline-none"
+          className="w-48 rounded-lg border border-slate-200 bg-white px-3 py-2 pr-10 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
           type="search"
-          placeholder="Search posts"
+          placeholder="Search..."
         />
         <button
           type="submit"
-          className="rounded-md bg-white px-3 py-2 font-semibold text-gray-900 transition hover:bg-gray-200"
+          className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-blue-600"
+          aria-label="Search"
         >
-          Go
+          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
         </button>
-      </form>
-      {lastSearch && (
-        <p className="text-white/80">
-          Simulated search for: <span className="font-semibold">{lastSearch}</span>
-        </p>
-      )}
-    </div>
+      </div>
+    </form>
   );
 }

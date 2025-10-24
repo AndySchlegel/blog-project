@@ -31,7 +31,7 @@ export default async function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 pb-20 pt-32">
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 pb-16 pt-24 sm:pb-20 sm:pt-32">
         {/* Animated Background Pattern */}
         <div className="absolute inset-0 opacity-20">
           <div className="absolute left-1/4 top-1/4 h-96 w-96 animate-pulse rounded-full bg-blue-500 blur-3xl" />
@@ -42,16 +42,17 @@ export default async function Home() {
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             {/* Badge */}
-            <div className="mb-8 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm ring-1 ring-white/20">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm ring-1 ring-white/20 sm:mb-8 sm:px-4 sm:py-2 sm:text-sm">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
               </span>
-              Java DevOps Engineer • AWS Certified • Homelab Enthusiast
+              <span className="hidden sm:inline">Java DevOps Engineer • AWS Certified • Homelab Enthusiast</span>
+              <span className="sm:hidden">DevOps & Cloud</span>
             </div>
 
             {/* Main Heading */}
-            <h1 className="mb-8 text-6xl font-black tracking-tight text-white sm:text-7xl lg:text-8xl">
+            <h1 className="mb-6 text-4xl font-black tracking-tight text-white sm:mb-8 sm:text-6xl lg:text-7xl xl:text-8xl">
               Von der Theorie
               <br />
               <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
@@ -60,8 +61,8 @@ export default async function Home() {
             </h1>
 
             {/* Subtitle */}
-            <p className="mx-auto mb-12 max-w-3xl text-xl leading-relaxed text-blue-100 sm:text-2xl">
-              AWS, DevOps, Self-Hosting & Homelab.<br />
+            <p className="mx-auto mb-8 max-w-3xl text-base leading-relaxed text-blue-100 sm:mb-12 sm:text-xl lg:text-2xl">
+              AWS, DevOps, Self-Hosting & Homelab.<br className="hidden sm:block" />
               Keine Marketing-Floskeln. Nur <span className="font-bold text-white">echte Projekte</span>,
               <span className="font-bold text-white"> echte Probleme</span>, echte Lösungen.
             </p>
@@ -70,42 +71,36 @@ export default async function Home() {
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/posts"
-                className="inline-flex items-center gap-2 rounded-full border-2 border-white bg-white/10 px-8 py-4 text-lg font-bold text-white backdrop-blur-sm transition-all hover:scale-105 hover:bg-white/20"
+                className="inline-flex items-center gap-2 rounded-full border-2 border-white bg-white/10 px-6 py-3 font-bold text-white backdrop-blur-sm transition-all hover:scale-105 hover:bg-white/20"
               >
-                <span>Zum Knowledge Hub</span>
-                <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
+                Zum Knowledge Hub
               </Link>
 
               <Link
                 href="/blog"
-                className="inline-flex items-center gap-2 rounded-full border-2 border-white bg-white/10 px-8 py-4 text-lg font-bold text-white backdrop-blur-sm transition-all hover:scale-105 hover:bg-white/20"
+                className="inline-flex items-center gap-2 rounded-full border-2 border-white bg-white/10 px-6 py-3 font-bold text-white backdrop-blur-sm transition-all hover:scale-105 hover:bg-white/20"
               >
-                <span>Meine Projekte</span>
-                <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                </svg>
+                Meine Projekte
               </Link>
             </div>
 
             {/* Stats */}
-            <div className="mt-16 grid grid-cols-2 gap-8 text-center sm:grid-cols-4">
-              <div className="rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
-                <div className="text-3xl font-bold text-white">12+</div>
-                <div className="mt-1 text-sm text-blue-200">Tech Guides</div>
+            <div className="mt-12 grid grid-cols-2 gap-4 text-center sm:mt-16 sm:grid-cols-4 sm:gap-8">
+              <div className="rounded-2xl bg-white/10 p-4 backdrop-blur-sm sm:p-6">
+                <div className="text-2xl font-bold text-white sm:text-3xl">12+</div>
+                <div className="mt-1 text-xs text-blue-200 sm:text-sm">Tech Guides</div>
               </div>
-              <div className="rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
-                <div className="text-3xl font-bold text-white">3</div>
-                <div className="mt-1 text-sm text-blue-200">AWS Certs</div>
+              <div className="rounded-2xl bg-white/10 p-4 backdrop-blur-sm sm:p-6">
+                <div className="text-2xl font-bold text-white sm:text-3xl">3</div>
+                <div className="mt-1 text-xs text-blue-200 sm:text-sm">AWS Certs</div>
               </div>
-              <div className="rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
-                <div className="text-3xl font-bold text-white">∞</div>
-                <div className="mt-1 text-sm text-blue-200">Docker Container</div>
+              <div className="rounded-2xl bg-white/10 p-4 backdrop-blur-sm sm:p-6">
+                <div className="text-2xl font-bold text-white sm:text-3xl">∞</div>
+                <div className="mt-1 text-xs text-blue-200 sm:text-sm">Docker Container</div>
               </div>
-              <div className="rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
-                <div className="text-3xl font-bold text-white">24/7</div>
-                <div className="mt-1 text-sm text-blue-200">Homelab Uptime</div>
+              <div className="rounded-2xl bg-white/10 p-4 backdrop-blur-sm sm:p-6">
+                <div className="text-2xl font-bold text-white sm:text-3xl">24/7</div>
+                <div className="mt-1 text-xs text-blue-200 sm:text-sm">Homelab Uptime</div>
               </div>
             </div>
           </div>
@@ -120,13 +115,13 @@ export default async function Home() {
       </section>
 
       {/* Featured Posts */}
-      <section className="bg-slate-50 py-20">
+      <section className="bg-slate-50 py-12 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 text-center">
-            <h2 className="mb-4 text-4xl font-bold text-slate-900">
+          <div className="mb-8 text-center sm:mb-12">
+            <h2 className="mb-3 text-3xl font-bold text-slate-900 sm:mb-4 sm:text-4xl">
               Featured <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Tutorials</span>
             </h2>
-            <p className="text-lg text-slate-600">Die beliebtesten Guides - battle-tested und production-ready</p>
+            <p className="text-base text-slate-600 sm:text-lg">Die beliebtesten Guides - battle-tested und production-ready</p>
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -216,13 +211,13 @@ export default async function Home() {
       </section>
 
       {/* Quick Links / Tech Stack */}
-      <section className="bg-white py-20">
+      <section className="bg-white py-12 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 text-center">
-            <h2 className="text-3xl font-bold text-slate-900">Was du hier findest</h2>
+          <div className="mb-8 text-center sm:mb-12">
+            <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">Was du hier findest</h2>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
             {/* AWS & Cloud */}
             <div className="group rounded-2xl border-2 border-slate-200 bg-white p-6 transition-all hover:border-blue-500 hover:shadow-xl">
               <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400 shadow-lg">
