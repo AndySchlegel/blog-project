@@ -99,13 +99,37 @@ function BlogPageContent() {
 
   // Restore scroll position when returning from detail page
   useEffect(() => {
-    const savedPosition = sessionStorage.getItem('blog-scroll-position');
-    if (savedPosition) {
-      // Small delay to ensure content is rendered
+    // Check for generic restore flag first
+    const restoreScroll = sessionStorage.getItem('restore-scroll');
+    if (restoreScroll) {
+      const position = parseInt(restoreScroll, 10);
+      // Add a small offset to account for header height
+      const offset = 80;
+      const adjustedPosition = Math.max(0, position - offset);
+
       setTimeout(() => {
-        window.scrollTo(0, parseInt(savedPosition, 10));
-        sessionStorage.removeItem('blog-scroll-position');
+        window.scrollTo({
+          top: adjustedPosition,
+          behavior: 'smooth'
+        });
+        sessionStorage.removeItem('restore-scroll');
       }, 100);
+    } else {
+      // Fallback to old blog-specific logic
+      const savedPosition = sessionStorage.getItem('blog-scroll-position');
+      if (savedPosition) {
+        const position = parseInt(savedPosition, 10);
+        const offset = 80;
+        const adjustedPosition = Math.max(0, position - offset);
+
+        setTimeout(() => {
+          window.scrollTo({
+            top: adjustedPosition,
+            behavior: 'smooth'
+          });
+          sessionStorage.removeItem('blog-scroll-position');
+        }, 100);
+      }
     }
   }, []);
 

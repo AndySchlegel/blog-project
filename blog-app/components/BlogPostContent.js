@@ -3,15 +3,24 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 export default function BlogPostContent({ post }) {
+  const router = useRouter()
   const [likes, setLikes] = useState(post.metrics?.likes ?? 0)
   const [views, setViews] = useState(post.metrics?.views ?? 0)
   const [isLiked, setIsLiked] = useState(false)
   const [isLiking, setIsLiking] = useState(false)
+  const [backUrl, setBackUrl] = useState('/blog')
 
-  // Track view on mount
+  // Determine back URL and track view on mount
   useEffect(() => {
+    // Check if we came from home page
+    const previousPage = sessionStorage.getItem('previous-page')
+    if (previousPage === '/') {
+      setBackUrl('/')
+    }
+
     const trackView = async () => {
       try {
         const response = await fetch(`/api/posts/${post._id}/view`, {
@@ -79,8 +88,25 @@ export default function BlogPostContent({ post }) {
           <div className="space-y-6 p-4 sm:p-6 md:space-y-10 md:p-8 lg:p-12">
             <header className="space-y-4">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <Link
-                  href="/blog"
+                <button
+                  onClick={() => {
+                    // Restore scroll position based on where we came from
+                    if (backUrl === '/') {
+                      const savedPosition = sessionStorage.getItem('home-scroll-position')
+                      if (savedPosition) {
+                        sessionStorage.setItem('restore-scroll', savedPosition)
+                      }
+                      sessionStorage.removeItem('previous-page')
+                      sessionStorage.removeItem('home-scroll-position')
+                    } else {
+                      const savedPosition = sessionStorage.getItem('blog-scroll-position')
+                      if (savedPosition) {
+                        sessionStorage.setItem('restore-scroll', savedPosition)
+                      }
+                      sessionStorage.removeItem('blog-scroll-position')
+                    }
+                    router.push(backUrl)
+                  }}
                   className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 font-bold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl sm:w-auto"
                   style={{ color: '#ffffff' }}
                 >
@@ -88,7 +114,7 @@ export default function BlogPostContent({ post }) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
                   Zurück zur Übersicht
-                </Link>
+                </button>
 
                 {post.category?.name && (
                   <div className="inline-flex w-fit rounded-full bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-2 text-xs font-bold text-blue-700 ring-1 ring-blue-200/50">
@@ -181,8 +207,25 @@ export default function BlogPostContent({ post }) {
 
               {/* Back to overview button at the bottom */}
               <div className="border-t border-slate-200 pt-6">
-                <Link
-                  href="/blog"
+                <button
+                  onClick={() => {
+                    // Restore scroll position based on where we came from
+                    if (backUrl === '/') {
+                      const savedPosition = sessionStorage.getItem('home-scroll-position')
+                      if (savedPosition) {
+                        sessionStorage.setItem('restore-scroll', savedPosition)
+                      }
+                      sessionStorage.removeItem('previous-page')
+                      sessionStorage.removeItem('home-scroll-position')
+                    } else {
+                      const savedPosition = sessionStorage.getItem('blog-scroll-position')
+                      if (savedPosition) {
+                        sessionStorage.setItem('restore-scroll', savedPosition)
+                      }
+                      sessionStorage.removeItem('blog-scroll-position')
+                    }
+                    router.push(backUrl)
+                  }}
                   className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 font-bold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl sm:w-auto"
                   style={{ color: '#ffffff' }}
                 >
@@ -190,7 +233,7 @@ export default function BlogPostContent({ post }) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
                   Zurück zur Übersicht
-                </Link>
+                </button>
               </div>
             </footer>
           </div>
