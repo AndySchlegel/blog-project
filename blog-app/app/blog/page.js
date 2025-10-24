@@ -103,32 +103,32 @@ function BlogPageContent() {
     const restoreScroll = sessionStorage.getItem('restore-scroll');
     if (restoreScroll) {
       const position = parseInt(restoreScroll, 10);
-      // Add a small offset to account for header height
-      const offset = 80;
-      const adjustedPosition = Math.max(0, position - offset);
 
-      setTimeout(() => {
-        window.scrollTo({
-          top: adjustedPosition,
-          behavior: 'smooth'
-        });
+      // Wait longer for content to fully render (especially images)
+      const restoreScrollPosition = () => {
+        // Use instant scroll instead of smooth to be more accurate
+        window.scrollTo(0, position);
         sessionStorage.removeItem('restore-scroll');
-      }, 100);
+      };
+
+      // Try multiple times to ensure content is loaded
+      setTimeout(restoreScrollPosition, 150);
+      setTimeout(restoreScrollPosition, 300);
+      setTimeout(restoreScrollPosition, 500);
     } else {
       // Fallback to old blog-specific logic
       const savedPosition = sessionStorage.getItem('blog-scroll-position');
       if (savedPosition) {
         const position = parseInt(savedPosition, 10);
-        const offset = 80;
-        const adjustedPosition = Math.max(0, position - offset);
 
-        setTimeout(() => {
-          window.scrollTo({
-            top: adjustedPosition,
-            behavior: 'smooth'
-          });
+        const restoreScrollPosition = () => {
+          window.scrollTo(0, position);
           sessionStorage.removeItem('blog-scroll-position');
-        }, 100);
+        };
+
+        setTimeout(restoreScrollPosition, 150);
+        setTimeout(restoreScrollPosition, 300);
+        setTimeout(restoreScrollPosition, 500);
       }
     }
   }, []);
