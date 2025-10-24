@@ -196,15 +196,12 @@ export default async function Home() {
           </div>
 
           {/* View All Button */}
-          <div className="mt-12 text-center">
+          <div className="mt-12 flex justify-center gap-4">
             <Link
               href="/posts"
-              className="inline-flex items-center gap-2 rounded-full border-2 border-blue-600 bg-blue-600/10 px-8 py-4 text-lg font-bold text-blue-700 shadow-lg transition-all hover:scale-105 hover:bg-blue-600/20 hover:shadow-xl"
+              className="rounded-full border-2 border-slate-600 bg-slate-600/10 px-6 py-3 font-bold text-slate-700 backdrop-blur-sm transition-all hover:scale-105 hover:bg-slate-600/20"
             >
               Alle Tutorials ansehen
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
             </Link>
           </div>
         </div>
