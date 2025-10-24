@@ -159,7 +159,7 @@ export default function Navigation() {
       {/* Mobile Navigation */}
       <div className="border-t border-slate-200 md:hidden">
         <ul className="flex items-center justify-around py-2">
-          {links.slice(0, 4).map((link) => {
+          {links.map((link) => {
             const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
             return (
               <li key={link.href}>
