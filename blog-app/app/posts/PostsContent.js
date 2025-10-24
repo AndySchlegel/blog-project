@@ -76,11 +76,12 @@ export default function PostsContent() {
           <div className="mt-6 flex flex-wrap justify-center gap-2">
             <Link
               href="/posts"
-              className={`rounded-full px-4 py-2 text-sm font-medium shadow-sm ring-1 transition hover:shadow-md ${
+              className={`rounded-xl px-4 py-2 text-sm font-medium transition-all ${
                 !categoryFilter
-                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white ring-blue-600'
-                  : 'bg-white text-slate-700 ring-slate-200 hover:ring-slate-300'
+                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
               }`}
+              style={!categoryFilter ? { color: '#ffffff' } : {}}
             >
               Alle
             </Link>
@@ -88,11 +89,12 @@ export default function PostsContent() {
               <Link
                 key={cat._id}
                 href={`/posts?category=${cat.slug}`}
-                className={`rounded-full px-4 py-2 text-sm font-medium shadow-sm ring-1 transition hover:shadow-md ${
+                className={`rounded-xl px-4 py-2 text-sm font-medium transition-all ${
                   categoryFilter === cat.slug
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white ring-blue-600'
-                    : 'bg-white text-slate-700 ring-slate-200 hover:ring-slate-300'
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
+                style={categoryFilter === cat.slug ? { color: '#ffffff' } : {}}
               >
                 {cat.name}
               </Link>

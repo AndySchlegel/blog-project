@@ -82,9 +82,20 @@ export default function Footer() {
         <div className="border-t border-white/10">
           <div className="container mx-auto px-4 py-6">
             <div className="flex flex-col items-center justify-between gap-4 text-sm md:flex-row">
-              <p className="text-slate-400">
-                &copy; {currentYear} Andy&apos;s Tech Hub. Made with ❤️ and lots of ☕
-              </p>
+              <div className="flex flex-col items-center gap-3 md:flex-row md:gap-4">
+                <p className="text-slate-400">
+                  &copy; {currentYear} Andy&apos;s Tech Hub. Made with ❤️ and lots of ☕
+                </p>
+                <div className="flex items-center gap-3 text-xs">
+                  <Link href="/impressum" className="text-slate-400 transition-colors hover:text-white">
+                    Impressum
+                  </Link>
+                  <span className="text-slate-600">•</span>
+                  <Link href="/datenschutz" className="text-slate-400 transition-colors hover:text-white">
+                    Datenschutz
+                  </Link>
+                </div>
+              </div>
               <div className="flex items-center gap-4 text-slate-400">
                 <span>Built with</span>
                 <div className="flex items-center gap-2">

@@ -72,6 +72,7 @@ export default async function Home() {
               <Link
                 href="/posts"
                 className="rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 font-bold text-white shadow-lg transition-all hover:scale-105"
+                style={{ color: '#ffffff' }}
               >
                 Zum Knowledge Hub
               </Link>
@@ -79,6 +80,7 @@ export default async function Home() {
               <Link
                 href="/blog"
                 className="rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 font-bold text-white shadow-lg transition-all hover:scale-105"
+                style={{ color: '#ffffff' }}
               >
                 Meine Projekte
               </Link>
@@ -144,13 +146,6 @@ export default async function Home() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
-                    {/* Category Badge */}
-                    {post.category && (
-                      <span className="absolute left-4 top-4 rounded-full bg-white/95 px-4 py-1.5 text-xs font-bold text-slate-900 backdrop-blur-sm">
-                        {post.category.name}
-                      </span>
-                    )}
-
                     {/* Featured Badge */}
                     <span className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full bg-gradient-to-r from-yellow-400 to-orange-400 px-3 py-1.5 text-xs font-bold text-white shadow-lg">
                       <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
@@ -163,6 +158,18 @@ export default async function Home() {
 
                 {/* Content */}
                 <div className="p-6">
+                  {/* Category Badge - Right Aligned */}
+                  {post.category && (
+                    <div className="mb-4 flex justify-end">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-blue-50 to-purple-50 px-3 py-1.5 text-xs font-semibold text-blue-700 ring-1 ring-blue-200">
+                        <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
+                        </svg>
+                        {post.category.name}
+                      </span>
+                    </div>
+                  )}
+
                   <h3 className="mb-3 text-xl font-bold text-slate-900 transition-colors group-hover:text-blue-600">
                     {post.title}
                   </h3>
@@ -200,6 +207,7 @@ export default async function Home() {
             <Link
               href="/posts"
               className="rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 font-bold text-white shadow-lg transition-all hover:scale-105"
+              style={{ color: '#ffffff' }}
             >
               Alle Tutorials ansehen
             </Link>
