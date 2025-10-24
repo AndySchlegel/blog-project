@@ -71,14 +71,14 @@ export default async function Home() {
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/posts"
-                className="rounded-full border-2 border-white bg-white/10 px-6 py-3 font-bold text-white backdrop-blur-sm transition-all hover:scale-105 hover:bg-white/20"
+                className="rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 font-bold text-white shadow-lg transition-all hover:scale-105"
               >
                 Zum Knowledge Hub
               </Link>
 
               <Link
                 href="/blog"
-                className="rounded-full border-2 border-white bg-white/10 px-6 py-3 font-bold text-white backdrop-blur-sm transition-all hover:scale-105 hover:bg-white/20"
+                className="rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 font-bold text-white shadow-lg transition-all hover:scale-105"
               >
                 Meine Projekte
               </Link>
@@ -197,14 +197,12 @@ export default async function Home() {
 
           {/* View All Button */}
           <div className="mt-12 flex justify-center">
-            <div className="rounded-3xl bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 p-8">
-              <Link
-                href="/posts"
-                className="rounded-full border-2 border-white bg-white/10 px-6 py-3 font-bold text-white backdrop-blur-sm transition-all hover:scale-105 hover:bg-white/20"
-              >
-                Alle Tutorials ansehen
-              </Link>
-            </div>
+            <Link
+              href="/posts"
+              className="rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 font-bold text-white shadow-lg transition-all hover:scale-105"
+            >
+              Alle Tutorials ansehen
+            </Link>
           </div>
         </div>
       </section>
