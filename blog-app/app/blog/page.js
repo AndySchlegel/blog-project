@@ -97,6 +97,18 @@ function BlogPageContent() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user, loading: authLoading } = useAuth();
 
+  // Restore scroll position when returning from detail page
+  useEffect(() => {
+    const savedPosition = sessionStorage.getItem('blog-scroll-position');
+    if (savedPosition) {
+      // Small delay to ensure content is rendered
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedPosition, 10));
+        sessionStorage.removeItem('blog-scroll-position');
+      }, 100);
+    }
+  }, []);
+
   // Update filter when searchQuery changes
   useEffect(() => {
     if (searchQuery) {
@@ -267,7 +279,7 @@ function BlogPageContent() {
           <div className="absolute right-1/4 top-1/3 h-96 w-96 animate-pulse rounded-full bg-purple-500 blur-3xl animation-delay-2000" />
         </div>
 
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="relative mx-auto max-w-7xl px-6 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm ring-1 ring-white/20 sm:mb-6 sm:px-4 sm:py-2 sm:text-sm">
               <span className="relative flex h-2 w-2">
@@ -278,11 +290,11 @@ function BlogPageContent() {
               <span className="sm:hidden">Tech Blog</span>
             </div>
 
-            <h1 className="mb-4 text-4xl font-black tracking-tight text-white sm:mb-6 sm:text-6xl lg:text-7xl">
+            <h1 className="mb-4 px-2 text-4xl font-black tracking-tight text-white sm:mb-6 sm:px-0 sm:text-6xl lg:text-7xl">
               Mein Tech <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Blog</span>
             </h1>
 
-            <p className="mx-auto max-w-3xl text-base leading-relaxed text-blue-100 sm:text-xl">
+            <p className="mx-auto max-w-3xl px-2 text-base leading-relaxed text-blue-100 sm:px-0 sm:text-xl">
               Behind the Scenes meiner Projekte. Von ersten Ideen über Debugging-Sessions bis zum Production Deployment.
             </p>
           </div>
@@ -604,15 +616,19 @@ function BlogPageContent() {
                   )}
 
                   {/* Footer */}
-                  <div className="flex items-center justify-between border-t border-slate-100 pt-4">
+                  <div className="flex flex-col gap-4 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
                     <PostMetrics postId={post._id} initialLikes={post.metrics?.likes ?? 0} initialViews={post.metrics?.views ?? 0} />
 
                     <Link
                       href={`/blog/${post.slug}`}
-                      className="flex items-center gap-2 font-semibold text-blue-600 transition-all group-hover:gap-3"
+                      onClick={(e) => {
+                        sessionStorage.setItem('blog-scroll-position', window.scrollY.toString());
+                      }}
+                      className="group/btn inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 font-bold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
+                      style={{ color: '#ffffff' }}
                     >
                       Weiterlesen
-                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="h-5 w-5 transition-transform group-hover/btn:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                       </svg>
                     </Link>
