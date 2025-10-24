@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 
 function PostMetrics({ postId, initialLikes, initialViews }) {
@@ -81,9 +82,12 @@ const INITIAL_FORM = {
 };
 
 export default function BlogPage() {
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get('search') || '';
+
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('');
+  const [filter, setFilter] = useState(searchQuery);
   const [errorMessage, setErrorMessage] = useState('');
   const [categories, setCategories] = useState([]);
   const [categoriesError, setCategoriesError] = useState('');
@@ -92,6 +96,13 @@ export default function BlogPage() {
   const [formSuccess, setFormSuccess] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user, loading: authLoading } = useAuth();
+
+  // Update filter when searchQuery changes
+  useEffect(() => {
+    if (searchQuery) {
+      setFilter(searchQuery);
+    }
+  }, [searchQuery]);
 
   const fetchPosts = useCallback(async () => {
     setLoading(true);

@@ -71,14 +71,14 @@ export default async function Home() {
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/posts"
-                className="inline-flex items-center gap-2 rounded-full border-2 border-white bg-white/10 px-6 py-3 font-bold text-white backdrop-blur-sm transition-all hover:scale-105 hover:bg-white/20"
+                className="rounded-full border-2 border-white bg-white/10 px-6 py-3 font-bold text-white backdrop-blur-sm transition-all hover:scale-105 hover:bg-white/20"
               >
                 Zum Knowledge Hub
               </Link>
 
               <Link
                 href="/blog"
-                className="inline-flex items-center gap-2 rounded-full border-2 border-white bg-white/10 px-6 py-3 font-bold text-white backdrop-blur-sm transition-all hover:scale-105 hover:bg-white/20"
+                className="rounded-full border-2 border-white bg-white/10 px-6 py-3 font-bold text-white backdrop-blur-sm transition-all hover:scale-105 hover:bg-white/20"
               >
                 Meine Projekte
               </Link>
@@ -199,7 +199,7 @@ export default async function Home() {
           <div className="mt-12 text-center">
             <Link
               href="/posts"
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 text-lg font-bold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
+              className="inline-flex items-center gap-2 rounded-full border-2 border-blue-600 bg-blue-600/10 px-8 py-4 text-lg font-bold text-blue-700 shadow-lg transition-all hover:scale-105 hover:bg-blue-600/20 hover:shadow-xl"
             >
               Alle Tutorials ansehen
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
