@@ -303,7 +303,7 @@ function BlogPageContent() {
           <div className="absolute right-1/4 top-1/3 h-96 w-96 animate-pulse rounded-full bg-purple-500 blur-3xl animation-delay-2000" />
         </div>
 
-        <div className="relative mx-auto max-w-7xl px-6 sm:px-6 lg:px-8">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm ring-1 ring-white/20 sm:mb-6 sm:px-4 sm:py-2 sm:text-sm">
               <span className="relative flex h-2 w-2">
@@ -314,11 +314,11 @@ function BlogPageContent() {
               <span className="sm:hidden">Tech Blog</span>
             </div>
 
-            <h1 className="mb-4 px-2 text-2xl font-black tracking-tight text-white sm:mb-6 sm:px-0 sm:text-6xl lg:text-7xl">
+            <h1 className="mb-4 text-4xl font-black tracking-tight text-white sm:mb-6 sm:text-6xl lg:text-7xl">
               Mein Tech <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Blog</span>
             </h1>
 
-            <p className="mx-auto max-w-3xl px-2 text-sm leading-relaxed text-blue-100 sm:px-0 sm:text-base md:text-xl">
+            <p className="mx-auto max-w-3xl text-base leading-relaxed text-blue-100 sm:text-base md:text-xl">
               Behind the Scenes meiner Projekte. Von ersten Ideen über Debugging-Sessions bis zum Production Deployment.
             </p>
           </div>

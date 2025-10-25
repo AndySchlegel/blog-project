@@ -82,10 +82,10 @@ export default function BlogPostContent({ post }) {
   const coverImage = typeof post.coverImage === 'string' ? post.coverImage : ''
 
   return (
-    <article className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 px-6 py-8 sm:px-6 sm:py-12 md:py-16 lg:px-8">
+    <article className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 px-4 py-8 sm:px-6 sm:py-12 md:py-16 lg:px-8">
       <div className="mx-auto max-w-4xl">
         <div className="overflow-hidden rounded-3xl bg-white shadow-xl">
-          <div className="space-y-6 p-6 sm:p-6 md:space-y-10 md:p-8 lg:p-12">
+          <div className="space-y-6 p-4 sm:p-6 md:space-y-10 md:p-8 lg:p-12">
             <header className="space-y-4">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <button
@@ -123,7 +123,7 @@ export default function BlogPostContent({ post }) {
                 )}
               </div>
 
-              <h1 className="text-3xl font-black text-slate-900 sm:text-4xl md:text-5xl">{post.title}</h1>
+              <h1 className="break-words text-3xl font-black text-slate-900 sm:text-4xl md:text-5xl">{post.title}</h1>
 
               <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500">
                 <span className="flex items-center gap-1.5">
